@@ -11,23 +11,11 @@ var water = null,
    _plants = null,
    _plantDB = null;
 	JSONR = json.Resource;
-var options = {
-    port: 1883,
-    clientId: 'server' + Math.random().toString(16).substr(2, 8),
-    username: 'pi',
-    password: 'root',
-    keepalive: 60,
-    // reconnectPeriod: 1000,
-    // protocolId: 'MQIsdp',
-    // protocolVersion: 3,
-    // clean: true,
-    encoding: 'utf8'
-};
 // var options = {
-//     port: 16108,
+//     port: 1883,
 //     clientId: 'server' + Math.random().toString(16).substr(2, 8),
-//     username: 'test',
-//     password: '123',
+//     username: 'pi',
+//     password: 'root',
 //     keepalive: 60,
 //     // reconnectPeriod: 1000,
 //     // protocolId: 'MQIsdp',
@@ -35,6 +23,18 @@ var options = {
 //     // clean: true,
 //     encoding: 'utf8'
 // };
+var options = {
+    port: 16108,
+    clientId: 'server' + Math.random().toString(16).substr(2, 8),
+    username: 'test',
+    password: '123',
+    keepalive: 60,
+    // reconnectPeriod: 1000,
+    // protocolId: 'MQIsdp',
+    // protocolVersion: 3,
+    // clean: true,
+    encoding: 'utf8'
+};
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -57,8 +57,8 @@ var con = mysql.createConnection({
 });
 // var jsontool = require("json-toolkit"),
 // 	JSONR = jsontool.Resource;
-  const client = mqtt.connect('tcp://192.168.43.108',options)
-// const client = mqtt.connect('tcp://m12.cloudmqtt.com',options)
+//  const client = mqtt.connect('tcp://192.168.43.108',options)
+  const client = mqtt.connect('tcp://m12.cloudmqtt.com',options)
 
 /**
  * The state of the garage, defaults to closed
@@ -186,36 +186,6 @@ function deletePlant(content){
 
 }
 
-// function addGarden(content){
-//   console.log("AddGarden")
-//   //console.log(content)
-//   //var json = content.toObject()
-//   console.log(content)
-//   var job = new JSONR(content,{
-//       from_file:false
-//   })
-//     //var values = []
-//   //  for(var i in content){
-//    //      values.push([content[0].name,JSON.stringify(content[0].plantids),JSON.stringify(content[0].measures)])
-//   //  }
-//    //console.log(values)
-//    content = JSON.parse(content)
-//    var id = content.id
-//     con.query("SELECT id FROM Garden WHERE id = "+mysql.escape(id), function (err, result, fields) {
-//             if (err) throw err
-//             if(result == null) return
-//         var name = content.name
-//         var ids = JSON.stringify(content.plantIds)
-//         var men = JSON.stringify(content.measures)
-//       var values = [[id,name,ids,men]]
-//         var sql = "INSERT INTO Garden (id,name, plantids,measures) VALUES ?";
-//         con.query(sql,[values], function (err, result) {
-//           if (err) throw err;
-//           console.log("Insert Garden ID " + id,"Done")
-//           console.log(result.affectedRows+" record inserted");
-//         });
-//               });
-// }
 function addGarden(content){
   console.log("AddGarden")
   //console.log(content)
@@ -231,33 +201,22 @@ function addGarden(content){
    //console.log(values)
    content = JSON.parse(content)
    var id = content.id
-   db.serialize(() => {
-  // queries will execute in serialized mode
-  db.serialize(() => {
-    let sql = "SELECT id FROM Garden WHERE id = ?"
-    db.get(sql, id, (err, row) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      if(row == null) return
-    
-    });
-          var name = content.name
-          var ids = JSON.stringify(content.plantIds)
-          var men = JSON.stringify(content.measures)
-        //  var values = [[id,name,ids,men]]
-          sql = "INSERT INTO Garden (id,name, plantids,measures) VALUES(?,?,?,?)";
-          db.run(sql,[id,name,ids,men], function (err, result) {
-            if (err) throw err;
-            console.log("Insert Garden ID " + id,"Done")
-          //  console.log(result.affectedRows+" record inserted");
-          });
-    });
-   
-    // queries will execute in serialized mode
-  });
-  // queries will execute in serialized mode
+    con.query("SELECT id FROM Garden WHERE id = "+mysql.escape(id), function (err, result, fields) {
+            if (err) throw err
+            if(result == null) return
+        var name = content.name
+        var ids = JSON.stringify(content.plantIds)
+        var men = JSON.stringify(content.measures)
+      var values = [[id,name,ids,men]]
+        var sql = "INSERT INTO Garden (id,name, plantids,measures) VALUES ?";
+        con.query(sql,[values], function (err, result) {
+          if (err) throw err;
+          console.log("Insert Garden ID " + id,"Done")
+          console.log(result.affectedRows+" record inserted");
+        });
+              });
 }
+
 
 
 function deleteGarden(content){
@@ -274,7 +233,7 @@ function deleteGarden(content){
       
 //   }
 //   console.log(content)
-var sql = "DELETE FROM Garden WHERE id = "+ mysql.escape(id);
+  var sql = "DELETE FROM Garden WHERE id = "+ mysql.escape(id);
   con.query(sql, function (err, result) {
     if (err) throw err;
      console.log("Delete Garden " + id,"Done")
@@ -315,12 +274,12 @@ function handleTemp(topic,content){
   if(status == "On") status = 1
   else status = 0
   var values = [["Temp",garden[1],start_time,status]]
-  // var sql = "INSERT INTO Care (action,gardenID,start_time,status) VALUES ?";
-  //   con.query(sql,[values], function (err, result) {
-  //     if (err) throw err;
-  //      console.log("Insert Temp","Done")
-  //     console.log(result.affectedRows+" record inserted");
-  //   });
+  var sql = "INSERT INTO Care (action,gardenID,start_time,status) VALUES ?";
+    con.query(sql,[values], function (err, result) {
+      if (err) throw err;
+       console.log("Insert Temp","Done")
+      console.log(result.affectedRows+" record inserted");
+    });
 
   db.run(`INSERT INTO Care (action,gardenID,start_time,status) VALUES(?,?,?,?)`, ["Temp",garden[1],start_time,status], function(err) {
     if (err) {
@@ -348,12 +307,12 @@ function handleLight(topic,content){
     if(status == "Off") status = 1
     else status = 0
     var values = [["Light",garden[1],start_time,status]]
-    // var sql = "INSERT INTO Care (action,gardenID,start_time,status) VALUES ?";
-    // con.query(sql,[values], function (err, result) {
-    //   if (err) throw err;
-    //   console.log("Insert Light","Done")
-    //   console.log(result.affectedRows+" record inserted");
-    // });
+    var sql = "INSERT INTO Care (action,gardenID,start_time,status) VALUES ?";
+    con.query(sql,[values], function (err, result) {
+      if (err) throw err;
+      console.log("Insert Light","Done")
+      console.log(result.affectedRows+" record inserted");
+    });
     db.run(`INSERT INTO Care (action,gardenID,start_time,status) VALUES(?,?,?,?)`, ["Light",garden[1],start_time,status], function(err) {
     if (err) {
       return console.log(err.message);
@@ -376,106 +335,50 @@ function addPlant(content){
         fs.writeFile('./data/plants.json', content);
     //}
 }
-// function syncGarden(content){
-//   console.log("SyncGarden")
-//   var gardens = JSON.parse(content)
-//   for (var i in gardens) {
-//   //  var garden = [[,gardens[i].plantids,gardens[i].id]]
-//    // console.log(garden)
-//     var sql = "UPDATE Garden SET name=?,plantids=?,humidity=?,temperature=?,light=? WHERE id = ?";
-//       con.query(sql,[gardens[i].name,JSON.stringify(gardens[i].plantIds), gardens[i].humidity, gardens[i].temperature, gardens[i].light,gardens[i].id], function (err, result) {
-//         if (err) throw err;
-//          console.log("Update all Garden","Done")
-//         console.log(result.affectedRows+" record updated");
-//       });
-
-      
-//   }
-//   // var garden = topic.split('/')
-//   // var old_measures;
-//   // var sql = "SELECT measures FROM Garden WHERE id = " +garden[2];
-//   // con.query(sql, function (err, result) {
-//   //   if (err) throw err;
-
-//   //    old_measures = result[0].measures
-//   //    var input = content.split("-")
-//   //     var time = Date.now()
-//   //     var measure = {
-//   //         temp: input[0],
-//   //         humidity: input[1],
-//   //         time: time
-//   //     }
-//   //     var new_measures = []
-//   //     if(old_measures !=null){
-//   //       new_measures = JSON.parse(old_measures)
-//   //     }
-//   //     new_measures.push(measure)
-//   //     new_measures = convertJson(new_measures)
-//   //      //console.log(new_measures)
-//   //     var sql = "UPDATE Garden SET measures = ? WHERE id = " + mysql.escape(garden[2]);
-//   //     con.query(sql,[new_measures], function (err, result) {
-//   //       if (err) throw err;
-//   //       client.publish("Update","Done")
-//   //       console.log(result.affectedRows+" record updated");
-//   //     });
-//   // });
-  
-// }
-
 function syncGarden(content){
   console.log("SyncGarden")
   var gardens = JSON.parse(content)
-  var count =  0
   for (var i in gardens) {
   //  var garden = [[,gardens[i].plantids,gardens[i].id]]
    // console.log(garden)
     var sql = "UPDATE Garden SET name=?,plantids=?,humidity=?,temperature=?,light=? WHERE id = ?";
-      db.run(sql,[gardens[i].name,JSON.stringify(gardens[i].plantIds), gardens[i].humidity, gardens[i].temperature, gardens[i].light,gardens[i].id], function (err, result) {
-        if (err)  console.log(err.message)
-        count += 1
+      con.query(sql,[gardens[i].name,JSON.stringify(gardens[i].plantIds), gardens[i].humidity, gardens[i].temperature, gardens[i].light,gardens[i].id], function (err, result) {
+        if (err) throw err;
+         console.log("Update all Garden","Done")
+        console.log(result.affectedRows+" record updated");
       });
   }
-  console.log("Update total Garden: "+ count)
-}
-// function handleDeviceRequest(topic,content){
-//   console.log("deviceRequest")
-//   //console.log(content)
-//   //var json = content.toObject()
-//   //console.log(topic)
-//   //console.log(content)
-//   backuptoFile()
-//   var garden = topic.split('/')
-//   var old_measures;
-//   var sql = "SELECT measures FROM Garden WHERE id = " +garden[2];
-//   con.query(sql, function (err, result) {
-//     if (err) throw err;
+  // var garden = topic.split('/')
+  // var old_measures;
+  // var sql = "SELECT measures FROM Garden WHERE id = " +garden[2];
+  // con.query(sql, function (err, result) {
+  //   if (err) throw err;
 
-//      old_measures = result[0].measures
-//      var input = content.split("-")
-//       var time = Date.now()
-//       var measure = {
-//           temp: input[0],
-//           humidity: input[1],
-//           light: input[2],
-//           time: time
-//       }
-//       var new_measures = []
-//       if(old_measures !=null && old_measures !=""){
-//         new_measures = JSON.parse(old_measures)
-//       }
-//       new_measures.push(measure)
-//       new_measures = convertJson(new_measures)
-//        //console.log(new_measures)
-       
-//       var sql = "UPDATE Garden SET measures = ? WHERE id = " + mysql.escape(garden[2]);
-//       con.query(sql,[new_measures], function (err, result) {
-//         if (err) throw err;
-//          console.log("Update Measure garden" + garden[2],"Done")
-//         console.log(result.affectedRows+" record updated");
-//       });
-//   });
+  //    old_measures = result[0].measures
+  //    var input = content.split("-")
+  //     var time = Date.now()
+  //     var measure = {
+  //         temp: input[0],
+  //         humidity: input[1],
+  //         time: time
+  //     }
+  //     var new_measures = []
+  //     if(old_measures !=null){
+  //       new_measures = JSON.parse(old_measures)
+  //     }
+  //     new_measures.push(measure)
+  //     new_measures = convertJson(new_measures)
+  //      //console.log(new_measures)
+  //     var sql = "UPDATE Garden SET measures = ? WHERE id = " + mysql.escape(garden[2]);
+  //     con.query(sql,[new_measures], function (err, result) {
+  //       if (err) throw err;
+  //       client.publish("Update","Done")
+  //       console.log(result.affectedRows+" record updated");
+  //     });
+  // });
   
-// }
+}
+
 
 function handleDeviceRequest(topic,content){
   console.log("deviceRequest")
@@ -486,16 +389,11 @@ function handleDeviceRequest(topic,content){
   backuptoFile()
   var garden = topic.split('/')
   var old_measures;
-  db.parallelize(() => {
-  // queries will execute in parallel mode
-  db.parallelize(() => {
-
-  let sql = "SELECT measures FROM Garden WHERE id = " +garden[2];
-  db.get(sql, function (err, result) {
+  var sql = "SELECT measures FROM Garden WHERE id = " +garden[2];
+  con.query(sql, function (err, result) {
     if (err) throw err;
-    if(result == null ) return
-    console.log(result)
-     old_measures = result.measures
+
+     old_measures = result[0].measures
      var input = content.split("-")
       var time = Date.now()
       var measure = {
@@ -511,20 +409,13 @@ function handleDeviceRequest(topic,content){
       new_measures.push(measure)
       new_measures = convertJson(new_measures)
        //console.log(new_measures)
-       
-      let sql = "UPDATE Garden SET measures = ? WHERE id = " + garden[2];
-      db.run(sql,[new_measures], function (err, result) {
-        if (err) {
-          return console.error(err.message);
-        }
+      var sql = "UPDATE Garden SET measures = ? WHERE id = " + mysql.escape(garden[2]);
+      con.query(sql,[new_measures], function (err, result) {
+        if (err) throw err;
          console.log("Update Measure garden" + garden[2],"Done")
+        console.log(result.affectedRows+" record updated");
       });
-    });
-    // queries will execute in parallel mode
   });
-  // queries will execute in parallel mode
-});
- 
   
 }
 function backuptoFile(){
@@ -815,7 +706,7 @@ function waterAuto() {
   //  }
 
 }
-setInterval(waterManual, 100000);
+setInterval(waterManual, 10000);
 setInterval(waterAuto, 1000*300);
 
 // function waterManual() {
@@ -978,7 +869,7 @@ function waterManual() {
                   var sql = "UPDATE Care SET end_time =  ?,status = ? WHERE id = " + mysql.escape(water.id);
                       db.run(sql,[new_endtime,new_status], function (err, result) {
                         if (err) throw err;
-                        console.log("Water manual","Done")
+                        client.publish("Water manual","Done")
                      //   console.log(result.affectedRows+" record updated");
                       });
 
