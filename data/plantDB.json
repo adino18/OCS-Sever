@@ -1,0 +1,121 @@
+[
+  {
+    "fertilizers": [
+      {
+        "day": "4",
+        "stage": "PLANTED",
+        "notes" : "Suggest 30N-20P-50K"
+      },
+      {
+        "day": "1",
+        "stage": "GERMINATION",
+        "notes" : "Suggest 30N-20P-50K"
+      },
+      {
+        "day": "3",
+        "stage": "VEGETATION"
+      },
+      {
+        "day": "4",
+        "stage": "FLOWER"
+      }
+    ],
+    "id": 0,
+    "image": "http://www.orchidsmadeeasy.com/wdp/wp-content/uploads/Dendrobium-221x300.jpg",
+    "info": "<p>\r\n    <br> Dendrobium is a diverse genus of orchids with different cultural needs. This culture information is for the phalenopsis-type dendrobiums pictured above. They are evergreen with thin, tall stems (pseudobulbs).\r\n    <br>\r\n    <br>\r\n    <strong>Water</strong>\r\n    <br> Water your orchids in the morning so that the leaves are dry before night. How often to water depends on the potting media used, the type of pot (plastic or clay), and the size of the pot. Dendrobiums like to be in small pots and are usually much taller than the pot is wide. Because they are usually large plants in relatively small pots, watering twice a week is about average. They like to be almost dry before re-watering.\r\n    <br>\r\n    <br> When watering, place the plant in the sink and use tepid water. Do not use salt-softened or distilled water. Let the water run through the plant for a minute or so. Be sure to let the plant drain completely.\r\n    <br>\r\n    <br> This is a good time to look closely at your plant for any sign of insects or disease.\r\n    <br>\r\n    <br>\r\n    <strong>Light</strong>\r\n    <br> Dendrobiums need lots of light, but not direct sun. A lightly shaded south window is best. East or west facing windows are satisfactory if bright (avoid direct sun except at the beginning or end of the day).\r\n    <br>\r\n    <br>\r\n    <strong>Temperature</strong>\r\n    <br> Dendrobiums can withstand hot weather if adequate ventilation and humidity are provided. They are best grown when the temperature is between 65°F and 75°F in the day and between 55ºF to 60ºF at night.\r\n    <br>\r\n    <br> Keep in mind that temperatures close to the window on a windowsill will be colder or hotter than your general house temperature.\r\n    <br>\r\n    <br>\r\n    <strong>Fertilizer&nbsp;</strong>\r\n    <br> Any balanced orchid fertilizer (look at the numbers on the container, 20-20-20, etc.) can be used to fertilize your orchid. Feed weakly (1/4 strength) weekly works well for dendrobiums. Once a month use clear water to flush any accumulated salts from the potting mix.\r\n    <br>\r\n    <br>\r\n    <strong>Tips</strong>\r\n    <br> Use a shallow tray of pebbles filled with water to increase humidity around your plants. Be sure the pot does not sit in water as this will rot the roots.\r\n    <br>\r\n    <br> Give your plants room for air to circulate around them. Crowding of plants can lead to problems with insect infestations and fungus. A small fan will help provide good air circulation around your plants.\r\n    <br>\r\n    <br> When your plant has finished blooming, you can cut the flowering stem at the point where it came out of the tall thin pseudobulbs. Do not cut off the tall thin stem because the new flower stem will grow from there. Continue watering and fertilizing and within a year a new growth will spike to begin the blooming cycle again!\r\n    <br>\r\n    <br> When re-potting, use a small pot; using a large pot will slow growth and reduces flowering significantly. Re-pot every two to three years.\r\n</p>",
+    "measures": [
+      {
+        "humid": "60-70",
+        "light": "25-70",
+        "stage": "GERMINATION",
+        "temp": "40-70"
+      },
+      {
+        "humid": "15-70",
+        "light": "50000-70000",
+        "stage": "DEFAULT",
+        "temp": "40-70"
+      },
+      {
+        "humid": "15-70",
+        "light": "50000-70000",
+        "stage": "PLANTED",
+        "temp": "40-70"
+      }
+    ],
+    "name": "Dendro"
+  },
+  {
+    "fertilizers": [
+      {
+        "day": "4",
+        "stage": "PLANTED"
+      },
+      {
+        "day": "3",
+        "stage": "VEGETATION"
+      },
+      {
+        "day": "4",
+        "stage": "FLOWER"
+      }
+    ],
+    "id": 1,
+    "image": "",
+    "info": "<p>\r\n    <br> Dendrobium is a diverse genus of orchids with different cultural needs. This culture information is for the phalenopsis-type dendrobiums pictured above. They are evergreen with thin, tall stems (pseudobulbs).\r\n    <br>\r\n    <br>\r\n    <strong>Water</strong>\r\n    <br> Water your orchids in the morning so that the leaves are dry before night. How often to water depends on the potting media used, the type of pot (plastic or clay), and the size of the pot. Dendrobiums like to be in small pots and are usually much taller than the pot is wide. Because they are usually large plants in relatively small pots, watering twice a week is about average. They like to be almost dry before re-watering.\r\n    <br>\r\n    <br> When watering, place the plant in the sink and use tepid water. Do not use salt-softened or distilled water. Let the water run through the plant for a minute or so. Be sure to let the plant drain completely.\r\n    <br>\r\n    <br> This is a good time to look closely at your plant for any sign of insects or disease.\r\n    <br>\r\n    <br>\r\n    <strong>Light</strong>\r\n    <br> Dendrobiums need lots of light, but not direct sun. A lightly shaded south window is best. East or west facing windows are satisfactory if bright (avoid direct sun except at the beginning or end of the day).\r\n    <br>\r\n    <br>\r\n    <strong>Temperature</strong>\r\n    <br> Dendrobiums can withstand hot weather if adequate ventilation and humidity are provided. They are best grown when the temperature is between 65°F and 75°F in the day and between 55ºF to 60ºF at night.\r\n    <br>\r\n    <br> Keep in mind that temperatures close to the window on a windowsill will be colder or hotter than your general house temperature.\r\n    <br>\r\n    <br>\r\n    <strong>Fertilizer&nbsp;</strong>\r\n    <br> Any balanced orchid fertilizer (look at the numbers on the container, 20-20-20, etc.) can be used to fertilize your orchid. Feed weakly (1/4 strength) weekly works well for dendrobiums. Once a month use clear water to flush any accumulated salts from the potting mix.\r\n    <br>\r\n    <br>\r\n    <strong>Tips</strong>\r\n    <br> Use a shallow tray of pebbles filled with water to increase humidity around your plants. Be sure the pot does not sit in water as this will rot the roots.\r\n    <br>\r\n    <br> Give your plants room for air to circulate around them. Crowding of plants can lead to problems with insect infestations and fungus. A small fan will help provide good air circulation around your plants.\r\n    <br>\r\n    <br> When your plant has finished blooming, you can cut the flowering stem at the point where it came out of the tall thin pseudobulbs. Do not cut off the tall thin stem because the new flower stem will grow from there. Continue watering and fertilizing and within a year a new growth will spike to begin the blooming cycle again!\r\n    <br>\r\n    <br> When re-potting, use a small pot; using a large pot will slow growth and reduces flowering significantly. Re-pot every two to three years.\r\n</p>",
+    "measures": [
+      {
+        "humid": "60-70",
+        "light": "60-70",
+        "stage": "GERMINATION",
+        "temp": "40-70",
+        "time": 0
+      },
+      {
+        "humid": "60-70",
+        "light": "50-70",
+        "stage": "PLANTED",
+        "temp": "40-70",
+        "time": 0
+      }
+    ],
+    "name": "Lemon"
+  },
+  {
+    "fertilizers": [
+      {
+        "day": "4",
+        "stage": "PLANTED"
+      },
+      {
+        "day": "3",
+        "stage": "VEGETATION"
+      },
+      {
+        "day": "4",
+        "stage": "FLOWER"
+      }
+    ],
+    "id": 2,
+    "image": "",
+    "info": "<p>\r\n    <br> Dendrobium is a diverse genus of orchids with different cultural needs. This culture information is for the phalenopsis-type dendrobiums pictured above. They are evergreen with thin, tall stems (pseudobulbs).\r\n    <br>\r\n    <br>\r\n    <strong>Water</strong>\r\n    <br> Water your orchids in the morning so that the leaves are dry before night. How often to water depends on the potting media used, the type of pot (plastic or clay), and the size of the pot. Dendrobiums like to be in small pots and are usually much taller than the pot is wide. Because they are usually large plants in relatively small pots, watering twice a week is about average. They like to be almost dry before re-watering.\r\n    <br>\r\n    <br> When watering, place the plant in the sink and use tepid water. Do not use salt-softened or distilled water. Let the water run through the plant for a minute or so. Be sure to let the plant drain completely.\r\n    <br>\r\n    <br> This is a good time to look closely at your plant for any sign of insects or disease.\r\n    <br>\r\n    <br>\r\n    <strong>Light</strong>\r\n    <br> Dendrobiums need lots of light, but not direct sun. A lightly shaded south window is best. East or west facing windows are satisfactory if bright (avoid direct sun except at the beginning or end of the day).\r\n    <br>\r\n    <br>\r\n    <strong>Temperature</strong>\r\n    <br> Dendrobiums can withstand hot weather if adequate ventilation and humidity are provided. They are best grown when the temperature is between 65°F and 75°F in the day and between 55ºF to 60ºF at night.\r\n    <br>\r\n    <br> Keep in mind that temperatures close to the window on a windowsill will be colder or hotter than your general house temperature.\r\n    <br>\r\n    <br>\r\n    <strong>Fertilizer&nbsp;</strong>\r\n    <br> Any balanced orchid fertilizer (look at the numbers on the container, 20-20-20, etc.) can be used to fertilize your orchid. Feed weakly (1/4 strength) weekly works well for dendrobiums. Once a month use clear water to flush any accumulated salts from the potting mix.\r\n    <br>\r\n    <br>\r\n    <strong>Tips</strong>\r\n    <br> Use a shallow tray of pebbles filled with water to increase humidity around your plants. Be sure the pot does not sit in water as this will rot the roots.\r\n    <br>\r\n    <br> Give your plants room for air to circulate around them. Crowding of plants can lead to problems with insect infestations and fungus. A small fan will help provide good air circulation around your plants.\r\n    <br>\r\n    <br> When your plant has finished blooming, you can cut the flowering stem at the point where it came out of the tall thin pseudobulbs. Do not cut off the tall thin stem because the new flower stem will grow from there. Continue watering and fertilizing and within a year a new growth will spike to begin the blooming cycle again!\r\n    <br>\r\n    <br> When re-potting, use a small pot; using a large pot will slow growth and reduces flowering significantly. Re-pot every two to three years.\r\n</p>",
+    "measures": [
+      {
+        "humid": "60-70",
+        "light": "60-70",
+        "stage": "GERMINATION",
+        "temp": "40-70",
+        "time": 0
+      },
+      {
+        "humid": "60-70",
+        "light": "50-70",
+        "stage": "PLANTED",
+        "temp": "40-70",
+        "time": 0
+      }
+    ],
+    "name": "Apple"
+  }
+  
+]
