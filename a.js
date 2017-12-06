@@ -68,7 +68,7 @@ var state = 'closed'
 
 
 ///connect sql
-con.connect();
+//con.connect();
 
 function task(name,content,time) {
     this.taskName = name
@@ -275,11 +275,11 @@ function deleteGarden(content){
 //   }
 //   console.log(content)
 var sql = "DELETE FROM Garden WHERE id = "+ mysql.escape(id);
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-     console.log("Delete Garden " + id,"Done")
-    console.log(result.affectedRows+" record deleted");
-  });
+  // con.query(sql, function (err, result) {
+  //   if (err) throw err;
+  //    console.log("Delete Garden " + id,"Done")
+  //   console.log(result.affectedRows+" record deleted");
+  // });
 
 }
 function getPlantDB(){
@@ -538,50 +538,50 @@ function backuptoFile(){
 		}else {
       var now = new Date()
       console.log(data + " " + now.getDate())
-      if(data == now.getDate()){ /// qua ngay moi
-        console.log("backuptofile")
-          con.query("SELECT id, name,measures FROM Garden", function (err, result, fields) {
-            if (err) throw err;
-            result.forEach(function(garden) {
-                var dir = "./data/"
-                var yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-                var folder = yesterday.getDate()+""+(yesterday.getMonth()+1)+""+yesterday.getFullYear()
-                var filename = garden.id +"_"+sanitize(garden.name)
-                if (!fs.existsSync(dir+folder)){
-                    fs.mkdirSync(dir+folder);
-                }
-                //ghi ra file
-                // console.log(garden)
-                fs.writeFile('./data/'+folder+"/"+garden.id +"_" + sanitize(garden.name),convertJson(garden),"utf8");
-                //xoa measure trong db
-                  var sql = "UPDATE Garden SET measures = ? WHERE id = "+ mysql.escape(garden.id);
-                  con.query(sql,[null], function (err, result) {
-                    if (err) throw err;
-                    console.log(result.affectedRows+" record deleted");
-                  });
-          }, this);
+      // if(data == now.getDate()){ /// qua ngay moi
+      //   console.log("backuptofile")
+      //     con.query("SELECT id, name,measures FROM Garden", function (err, result, fields) {
+      //       if (err) throw err;
+      //       result.forEach(function(garden) {
+      //           var dir = "./data/"
+      //           var yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+      //           var folder = yesterday.getDate()+""+(yesterday.getMonth()+1)+""+yesterday.getFullYear()
+      //           var filename = garden.id +"_"+sanitize(garden.name)
+      //           if (!fs.existsSync(dir+folder)){
+      //               fs.mkdirSync(dir+folder);
+      //           }
+      //           //ghi ra file
+      //           // console.log(garden)
+      //           fs.writeFile('./data/'+folder+"/"+garden.id +"_" + sanitize(garden.name),convertJson(garden),"utf8");
+      //           //xoa measure trong db
+      //             var sql = "UPDATE Garden SET measures = ? WHERE id = "+ mysql.escape(garden.id);
+      //             con.query(sql,[null], function (err, result) {
+      //               if (err) throw err;
+      //               console.log(result.affectedRows+" record deleted");
+      //             });
+      //     }, this);
             
             
-              console.log("Backup garden to file")
+      //         console.log("Backup garden to file")
 
-          });
-          //ghi lai ngay moi
-          var d = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-          fs.writeFile('./data/config',d.getDate());
-      }
+      //     });
+      //     //ghi lai ngay moi
+      //     var d = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+      //     fs.writeFile('./data/config',d.getDate());
+      // }
 		}
 	});
 }
 
 function getGardenMensures(){
     console.log('Get garden measures')
-    con.query("SELECT id,measures FROM Garden", function (err, result, fields) {
-            if (err) throw err;
+    // con.query("SELECT id,measures FROM Garden", function (err, result, fields) {
+    //         if (err) throw err;
 
-            newTask("Garden/Update", result, function(newtask) {
-                client.publish("Server/Task",convertJson(newtask))
-            });
-        });
+    //         newTask("Garden/Update", result, function(newtask) {
+    //             client.publish("Server/Task",convertJson(newtask))
+    //         });
+    //     });
 }
 
 function handleWater(name, content){
@@ -599,18 +599,18 @@ console.log(values)
   if(water.time != null) end_time  = start_time + water.time * 60*1000
   var values = [[gardenId[1],amount,start_time,0]]
   var sql = "INSERT INTO Water (gardenID,amount,time,status) VALUES ?";
-  con.query(sql,[values], function (err, result) {
-    if (err) throw err;
-     console.log("Insert Water","Done")
-    console.log(result.affectedRows+" record inserted");
-  });
+  // con.query(sql,[values], function (err, result) {
+  //   if (err) throw err;
+  //    console.log("Insert Water","Done")
+  //   console.log(result.affectedRows+" record inserted");
+  // });
   var values = [["Water",gardenId[1],amount,start_time,end_time,0]]
   var sql = "INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES ?";
-  con.query(sql,[values], function (err, result) {
-    if (err) throw err;
-     console.log("Insert Water","Done")
-    console.log(result.affectedRows+" record inserted");
-  });
+  // con.query(sql,[values], function (err, result) {
+  //   if (err) throw err;
+  //    console.log("Insert Water","Done")
+  //   console.log(result.affectedRows+" record inserted");
+  // });
 
   db.run(`INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES(?,?,?,?,?,?)`, ["Water",gardenId[1],amount,start_time,end_time,0], function(err) {
     if (err) {
@@ -697,126 +697,126 @@ function readPlantDBData(){
 }
 
 ///Manual water schedule
-function waterAuto() {
-  console.log("Auto")
-    //do Stuff here   12h50
-    var date = new Date
-    console.log(date.getHours())
-    // if(timeScheduleWater.indexOf(date.getHours()) >-1 && date.getMinutes()<10){ ///dieu kien sai  // trung h && phút <10
-    //if(true){ ///dieu kien sai  // trung h && phút <10
+// function waterAuto() {
+//   console.log("Auto")
+//     //do Stuff here   12h50
+//     var date = new Date
+//     console.log(date.getHours())
+//     // if(timeScheduleWater.indexOf(date.getHours()) >-1 && date.getMinutes()<10){ ///dieu kien sai  // trung h && phút <10
+//     //if(true){ ///dieu kien sai  // trung h && phút <10
 
-   con.query("SELECT * FROM Garden", function (err, result, fields) {
-            if (err) throw err;
+//    con.query("SELECT * FROM Garden", function (err, result, fields) {
+//             if (err) throw err;
             
-            for(var i in result){
-              var garden = result[i]
-          // //   var a = JSON.stringify(garden.measures)
-            //  console.log("Time: "+ Array.isArray(a))
-            // console.log(garden)
-               if(garden.measures == null || garden.measures == "") return
-             //  console.log("A")
-              var last_measure = JSON.parse(garden.measures)
-              if(last_measure == null || last_measure =="") 
-                  continue
-              last_measure = last_measure[last_measure.length-1]
-              var gardenHumid = null
-              var gardenTemp = null
-              var gardenLight = null
-              if(garden.humidity !=null && garden.humidity != "") gardenHumid = garden.humidity.split("-")
-              if(garden.temperature !=null && garden.temperature != "")  gardenTemp = garden.temperature.split("-")
-              if(garden.light !=null && garden.light != "")  gardenLight = garden.light.split("-")
+//             for(var i in result){
+//               var garden = result[i]
+//           // //   var a = JSON.stringify(garden.measures)
+//             //  console.log("Time: "+ Array.isArray(a))
+//             // console.log(garden)
+//                if(garden.measures == null || garden.measures == "") return
+//              //  console.log("A")
+//               var last_measure = JSON.parse(garden.measures)
+//               if(last_measure == null || last_measure =="") 
+//                   continue
+//               last_measure = last_measure[last_measure.length-1]
+//               var gardenHumid = null
+//               var gardenTemp = null
+//               var gardenLight = null
+//               if(garden.humidity !=null && garden.humidity != "") gardenHumid = garden.humidity.split("-")
+//               if(garden.temperature !=null && garden.temperature != "")  gardenTemp = garden.temperature.split("-")
+//               if(garden.light !=null && garden.light != "")  gardenLight = garden.light.split("-")
 
-             // console.log(last_measure)
-              var plantids =JSON.parse(garden.plantids)
-              //console.log(plantids)
-              if(plantids == null || plantids =="") 
-                  continue
-              readPlantData()
-              var plants = _plants
-              if(plants == null || plants =="") 
-                  continue
-             // console.log(plants)
-              if(plants.length >0){
-                      // for(var j in plantids){
-                      //   var plant = plants.find(o => o.id == plantids[j])
-                      // }
-              var plant = plants.find(o => o.id == plantids[0])  ///lay plant dau tien trong garden
-              if (plant == null) continue
-              readPlantDBData()
-              var plantDBs = _plantDB
-              if(plantDBs == null || plantDBs =="") 
-                  continue
-              var plantDB = plantDBs.find(o=>o.id == plant.plantDBId)
-            //  console.log(plantDB.measures[0])
-              var measures = plantDB.measures
-            //  console.log("Plant"+plant.actions)
-             getPlantStage(plant.actions,function(stage){
-                  var measure = measures.find(o => o.stage == stage.newStage)
-                  var temp = measure.temp.split("-")
-                var humid = measure.humid.split("-")
-                 var light = measure.light.split("-")
+//              // console.log(last_measure)
+//               var plantids =JSON.parse(garden.plantids)
+//               //console.log(plantids)
+//               if(plantids == null || plantids =="") 
+//                   continue
+//               readPlantData()
+//               var plants = _plants
+//               if(plants == null || plants =="") 
+//                   continue
+//              // console.log(plants)
+//               if(plants.length >0){
+//                       // for(var j in plantids){
+//                       //   var plant = plants.find(o => o.id == plantids[j])
+//                       // }
+//               var plant = plants.find(o => o.id == plantids[0])  ///lay plant dau tien trong garden
+//               if (plant == null) continue
+//               readPlantDBData()
+//               var plantDBs = _plantDB
+//               if(plantDBs == null || plantDBs =="") 
+//                   continue
+//               var plantDB = plantDBs.find(o=>o.id == plant.plantDBId)
+//             //  console.log(plantDB.measures[0])
+//               var measures = plantDB.measures
+//             //  console.log("Plant"+plant.actions)
+//              getPlantStage(plant.actions,function(stage){
+//                   var measure = measures.find(o => o.stage == stage.newStage)
+//                   var temp = measure.temp.split("-")
+//                 var humid = measure.humid.split("-")
+//                  var light = measure.light.split("-")
 
-                var minTemp = temp[0]
-                var maxTemp = temp[1]
-                var minHumid = humid[0]
-                var maxHumid = humid[1]
-                var minLight = light[0]
-                var maxLight = light[1]
-                if(gardenHumid != null && gardenHumid[0] != "") minHumid = gardenHumid[0]
-                if(gardenHumid != null && gardenHumid[1] != "") maxHumid = gardenHumid[1]
-                if(gardenTemp != null && gardenTemp[0] != "") minTemp = gardenTemp[0]
-                if(gardenTemp != null && gardenTemp[1] != "") maxTemp = gardenTemp[1]
-                if(gardenLight != null && gardenLight[0] != "") minLight = gardenLight[0]
-                if(gardenLight != null && gardenLight[1] != "") maxLight = gardenLight[1]
+//                 var minTemp = temp[0]
+//                 var maxTemp = temp[1]
+//                 var minHumid = humid[0]
+//                 var maxHumid = humid[1]
+//                 var minLight = light[0]
+//                 var maxLight = light[1]
+//                 if(gardenHumid != null && gardenHumid[0] != "") minHumid = gardenHumid[0]
+//                 if(gardenHumid != null && gardenHumid[1] != "") maxHumid = gardenHumid[1]
+//                 if(gardenTemp != null && gardenTemp[0] != "") minTemp = gardenTemp[0]
+//                 if(gardenTemp != null && gardenTemp[1] != "") maxTemp = gardenTemp[1]
+//                 if(gardenLight != null && gardenLight[0] != "") minLight = gardenLight[0]
+//                 if(gardenLight != null && gardenLight[1] != "") maxLight = gardenLight[1]
 
-                console.log("Temp: " + minTemp +" "+ maxTemp)///temp cay
-                console.log("Humid: "+minHumid+ " " + maxHumid)//humid cay
-                console.log("Light: " +minLight + " " + maxLight)//humid cay
-                console.log("realTemp:" + last_measure.temp)
-                console.log("realHumid:" + last_measure.humid)
-                console.log("realLight:" + last_measure.light)
-                last_measure.light = last_measure.light == null ? 0 :last_measure.light
-                //water
-                if(last_measure.humid < minHumid){ //tuoi khi <min
-                    client.publish("Server/Water/"+garden.id,"ON")
-                    console.log("Garden"+garden.id+"Water ON")
-                }
-                if (last_measure.humid>maxHumid) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
-                    client.publish("Server/Water/"+garden.id,"OFF")
-                    console.log("Garden"+garden.id+"Water OFF")
-                }
-                //light
-                if(last_measure.light < minLight){ //tuoi khi <min
-                    client.publish("Server/Light/"+garden.id,"ON")
-                    console.log("Garden"+garden.id+"Light ON")
-                }
-                if (last_measure.light>maxLight) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
-                    client.publish("Server/Light/"+garden.id,"OFF")
-                    console.log("Garden"+garden.id+"Light OFF")
-                } 
-                //temp
-                if(last_measure.temp < minTemp){ //tuoi khi <min
-                    client.publish("Server/Temp/"+garden.id,"ON")
-                    console.log("Garden"+garden.id+"Temp ON")
-                }
-                if (last_measure.temp>maxTemp) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
-                    client.publish("Server/Temp/"+garden.id,"OFF")
-                    console.log("Garden"+garden.id+"Temp Off")
-                }     
+//                 console.log("Temp: " + minTemp +" "+ maxTemp)///temp cay
+//                 console.log("Humid: "+minHumid+ " " + maxHumid)//humid cay
+//                 console.log("Light: " +minLight + " " + maxLight)//humid cay
+//                 console.log("realTemp:" + last_measure.temp)
+//                 console.log("realHumid:" + last_measure.humid)
+//                 console.log("realLight:" + last_measure.light)
+//                 last_measure.light = last_measure.light == null ? 0 :last_measure.light
+//                 //water
+//                 if(last_measure.humid < minHumid){ //tuoi khi <min
+//                     client.publish("Server/Water/"+garden.id,"ON")
+//                     console.log("Garden"+garden.id+"Water ON")
+//                 }
+//                 if (last_measure.humid>maxHumid) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
+//                     client.publish("Server/Water/"+garden.id,"OFF")
+//                     console.log("Garden"+garden.id+"Water OFF")
+//                 }
+//                 //light
+//                 if(last_measure.light < minLight){ //tuoi khi <min
+//                     client.publish("Server/Light/"+garden.id,"ON")
+//                     console.log("Garden"+garden.id+"Light ON")
+//                 }
+//                 if (last_measure.light>maxLight) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
+//                     client.publish("Server/Light/"+garden.id,"OFF")
+//                     console.log("Garden"+garden.id+"Light OFF")
+//                 } 
+//                 //temp
+//                 if(last_measure.temp < minTemp){ //tuoi khi <min
+//                     client.publish("Server/Temp/"+garden.id,"ON")
+//                     console.log("Garden"+garden.id+"Temp ON")
+//                 }
+//                 if (last_measure.temp>maxTemp) {  //tuoi den khi > max // || last_measure.humidity >= humid[0]
+//                     client.publish("Server/Temp/"+garden.id,"OFF")
+//                     console.log("Garden"+garden.id+"Temp Off")
+//                 }     
 
-                console.log("Water auto")
+//                 console.log("Water auto")
 
-                  // console.log(measure)
-              })
-            }
-          }
+//                   // console.log(measure)
+//               })
+//             }
+//           }
           
-        });
-  //  }
+//         });
+//   //  }
 
-}
+// }
 setInterval(waterManual, 100000);
-setInterval(waterAuto, 1000*300);
+// setInterval(waterAuto, 1000*300);
 
 // function waterManual() {
 //     //do Stuff here
