@@ -67,8 +67,8 @@ var options = {
 var state = 'closed'
 
 
-///connect sql
-con.connect();
+///connect sql ////cccccccc
+//con.connect();
 
 function task(name,content,time) {
     this.taskName = name
@@ -239,19 +239,19 @@ function addGarden(content){
       if (err) {
         return console.error(err.message);
       }
-      if(row == null) return
-    
+      if(row != null) return 
+        var name = content.name
+        var ids = JSON.stringify(content.plantIds)
+        var men = JSON.stringify(content.measures)
+      //  var values = [[id,name,ids,men]]
+        sql = "INSERT INTO Garden (id,name, plantids,measures) VALUES(?,?,?,?)";
+        db.run(sql,[id,name,ids,men], function (err, result) {
+          if (err) throw err;
+          console.log("Insert Garden ID " + id,"Done")
+        //  console.log(result.affectedRows+" record inserted");
+        });
     });
-          var name = content.name
-          var ids = JSON.stringify(content.plantIds)
-          var men = JSON.stringify(content.measures)
-        //  var values = [[id,name,ids,men]]
-          sql = "INSERT INTO Garden (id,name, plantids,measures) VALUES(?,?,?,?)";
-          db.run(sql,[id,name,ids,men], function (err, result) {
-            if (err) throw err;
-            console.log("Insert Garden ID " + id,"Done")
-          //  console.log(result.affectedRows+" record inserted");
-          });
+        
     });
    
     // queries will execute in serialized mode
@@ -274,13 +274,13 @@ function deleteGarden(content){
       
 //   }
 //   console.log(content)
-var sql = "DELETE FROM Garden WHERE id = "+ mysql.escape(id);
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-     console.log("Delete Garden " + id,"Done")
-    console.log(result.affectedRows+" record deleted");
+var sql = "DELETE FROM Garden WHERE id = "+ id;
+  db.run(sql, function(err) {
+    if (err) {
+      return console.log(err.message);
+    }
+    console.log("Delete Garden: " + id)
   });
-
 }
 function getPlantDB(){
     console.log('Get all plantDB')
@@ -429,11 +429,19 @@ function syncGarden(content){
   for (var i in gardens) {
   //  var garden = [[,gardens[i].plantids,gardens[i].id]]
    // console.log(garden)
-    var sql = "UPDATE Garden SET name=?,plantids=?,humidity=?,temperature=?,light=? WHERE id = ?";
-      db.run(sql,[gardens[i].name,JSON.stringify(gardens[i].plantIds), gardens[i].humidity, gardens[i].temperature, gardens[i].light,gardens[i].id], function (err, result) {
-        if (err)  console.log(err.message)
-        count += 1
-      });
+   let sql = "SELECT * from Garden WHERE id = " + gardens[i].id
+   db.get(sql,(err,row) =>{
+    //  console.log(row)
+     if(row == null){ // neu no ko tim thay >>> tao moi 
+      sql = "INSERT INTO Garden(name,plantids,humidity,temperature,light,id) VALUES(?,?,?,?,?,?)"
+     }else{
+      sql = "UPDATE Garden SET name=?,plantids=?,humidity=?,temperature=?,light=? WHERE id = ?";      
+     }
+     db.run(sql,[gardens[i].name,JSON.stringify(gardens[i].plantIds), gardens[i].humidity, gardens[i].temperature, gardens[i].light,gardens[i].id],  (err, result) =>{
+       if (err)  console.log(err.message)
+     });
+   })
+      
   }
   console.log("Update total Garden: "+ count)
 }
@@ -538,14 +546,17 @@ function backuptoFile(){
 		}else {
       var now = new Date()
       console.log(data + " " + now.getDate())
-      if(data == now.getDate()){ /// qua ngay moi
+      if(data == now.getDate() || data < now.getDate()){ /// qua ngay moi
         console.log("backuptofile")
-          con.query("SELECT id, name,measures FROM Garden", function (err, result, fields) {
-            if (err) throw err;
+          db.all("SELECT id, name,measures FROM Garden", (err, result) => {
+            if (err) return console.error(err.message);
             result.forEach(function(garden) {
                 var dir = "./data/"
                 var yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
                 var folder = yesterday.getDate()+""+(yesterday.getMonth()+1)+""+yesterday.getFullYear()
+                if(data < now.getDate()){
+                  folder = data + "-"+folder
+                }
                 var filename = garden.id +"_"+sanitize(garden.name)
                 if (!fs.existsSync(dir+folder)){
                     fs.mkdirSync(dir+folder);
@@ -554,10 +565,10 @@ function backuptoFile(){
                 // console.log(garden)
                 fs.writeFile('./data/'+folder+"/"+garden.id +"_" + sanitize(garden.name),convertJson(garden),"utf8");
                 //xoa measure trong db
-                  var sql = "UPDATE Garden SET measures = ? WHERE id = "+ mysql.escape(garden.id);
-                  con.query(sql,[null], function (err, result) {
-                    if (err) throw err;
-                    console.log(result.affectedRows+" record deleted");
+                  var sql = "UPDATE Garden SET measures = ? WHERE id = "+ garden.id;
+                  db.run(sql,[null], function (err, result) {
+                    if (err) console.error(err.message);
+                   
                   });
           }, this);
             
@@ -575,8 +586,8 @@ function backuptoFile(){
 
 function getGardenMensures(){
     console.log('Get garden measures')
-    con.query("SELECT id,measures FROM Garden", function (err, result, fields) {
-            if (err) throw err;
+    db.all("SELECT id,measures FROM Garden", (err, result) => {
+            if (err) console.error(err.message);
 
             newTask("Garden/Update", result, function(newtask) {
                 client.publish("Server/Task",convertJson(newtask))
@@ -599,18 +610,18 @@ console.log(values)
   if(water.time != null) end_time  = start_time + water.time * 60*1000
   var values = [[gardenId[1],amount,start_time,0]]
   var sql = "INSERT INTO Water (gardenID,amount,time,status) VALUES ?";
-  con.query(sql,[values], function (err, result) {
-    if (err) throw err;
-     console.log("Insert Water","Done")
-    console.log(result.affectedRows+" record inserted");
-  });
-  var values = [["Water",gardenId[1],amount,start_time,end_time,0]]
-  var sql = "INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES ?";
-  con.query(sql,[values], function (err, result) {
-    if (err) throw err;
-     console.log("Insert Water","Done")
-    console.log(result.affectedRows+" record inserted");
-  });
+  // con.query(sql,[values], function (err, result) {
+  //   if (err) throw err;
+  //    console.log("Insert Water","Done")
+  //   console.log(result.affectedRows+" record inserted");
+  // });
+  // var values = [["Water",gardenId[1],amount,start_time,end_time,0]]
+  // var sql = "INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES ?";
+  // con.query(sql,[values], function (err, result) {
+  //   if (err) throw err;
+  //    console.log("Insert Water","Done")
+  //   console.log(result.affectedRows+" record inserted");
+  // });
 
   db.run(`INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES(?,?,?,?,?,?)`, ["Water",gardenId[1],amount,start_time,end_time,0], function(err) {
     if (err) {
@@ -636,6 +647,76 @@ console.log(values)
 //     }, 5000)
 //   }
 // }
+
+function updateCare(name,content){
+  console.log("updateCare")
+ // fs.writeFile('./data/water.json', content);
+  var func = name.split('/')
+  var func = func[1]
+  var care = JSON.parse(content)
+  var date = care.date
+  var amount = care.amount
+  var time = care.time
+  var light = care.light
+  var temp = care.temp
+
+  // if(water.amount != null || water.time != null){
+  // console.log(values)
+  //   if(water.time != null) end_time  = start_time + water.time * 60*1000
+  //   var values = [[gardenId[1],amount,start_time,0]]
+  switch(func){
+    case "Update":
+      //update care
+      ///temp
+      let sql = "SELECT * FROM Care WHERE gardenID = ? AND time = ?"
+      db.parallelize(() => {
+        // queries will execute in parallel mode
+        db.parallelize(() => {
+          if(light == null){
+            sql = "DELETE FROM Care WHERE gardenID = ? AND time = ? AND Action = ?"
+            db.run(sql, [])
+          }else if(light == 1){
+            sql = "UPDATE FROM Care SET WHERE gardenID = ? AND time = ? AND Action = ?"
+          }
+          
+          
+          db.all(sql,[],(err,row)=>{
+
+          })
+          
+
+        });
+        // queries will execute in parallel mode
+      });
+
+
+      break
+    case "Delete":
+      break
+  }
+  var water = JSON.parse(content)
+  var amount = water.amount
+  var start_time = water.date
+  var end_time;
+  console.log(water.amount + "a " + water.time)
+  var notes = water.notes
+  if(water.amount != null || water.time != null){
+  console.log(values)
+    if(water.time != null) end_time  = start_time + water.time * 60*1000
+    var values = [[gardenId[1],amount,start_time,0]]
+
+    db.run(`INSERT INTO Care (action,gardenID,amount,start_time,end_time,status) VALUES(?,?,?,?,?,?)`, ["Water",gardenId[1],amount,start_time,end_time,0], function(err) {
+      if (err) {
+        return console.log(err.message);
+      }
+      // get the last insert id
+      console.log(`A row has been inserted to Care with rowid ${this.lastID}`);
+    });
+    //db.close()
+  }
+
+}
+
 
 /**
  * Want to notify controller that garage is disconnected before shutting down
@@ -705,8 +786,8 @@ function waterAuto() {
     // if(timeScheduleWater.indexOf(date.getHours()) >-1 && date.getMinutes()<10){ ///dieu kien sai  // trung h && phút <10
     //if(true){ ///dieu kien sai  // trung h && phút <10
 
-   con.query("SELECT * FROM Garden", function (err, result, fields) {
-            if (err) throw err;
+   db.all("SELECT * FROM Garden", (err, result) => {
+            if (err) console.error(err.message);
             
             for(var i in result){
               var garden = result[i]
@@ -815,7 +896,7 @@ function waterAuto() {
   //  }
 
 }
-setInterval(waterManual, 100000);
+setInterval(waterManual, 10000);
 setInterval(waterAuto, 1000*300);
 
 // function waterManual() {
@@ -915,7 +996,7 @@ function waterManual() {
             if (err) throw err;
            // for(var i in row){
               var water = row
-              console.log(row)
+              console.log(row.action)
             //  console.log("Time: "+ time)
               if(((water.action == "Temp" || water.action == "Light") && water.start_time <= time) || (water.status == 0 && water.start_time <= time) || (water.status == 1 && water.end_time<=time)){
              //   console.log("Water "+water.gardenID+water.amount+"status:" + water.status)
@@ -974,8 +1055,9 @@ function waterManual() {
 
                       break
                 }
+                console.log("New status", new_status)
                 ///da tuoi nhung chua tat
-                  var sql = "UPDATE Care SET end_time =  ?,status = ? WHERE id = " + mysql.escape(water.id);
+                  let sql = "UPDATE Care SET end_time =  ?, status = ? WHERE id = " + water.id;
                       db.run(sql,[new_endtime,new_status], function (err, result) {
                         if (err) throw err;
                         console.log("Water manual","Done")
